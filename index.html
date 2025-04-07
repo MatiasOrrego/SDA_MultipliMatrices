@@ -4,157 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Multiplicación de Matrices</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 20px;
-            background-color: #121212; /* Fondo oscuro */
-            color: #ffffff; /* Texto blanco */
-        }
-        input {
-            margin: 5px;
-            padding: 10px;
-            font-size: 16px;
-            background-color: #1e1e1e; /* Fondo oscuro para inputs */
-            color: #ffffff; /* Texto blanco */
-            border: 1px solid #ffffff; /* Borde blanco */
-            border-radius: 5px;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 10px;
-            cursor: pointer;
-            background-color: #4CAF50; /* Botón verde */
-            color: white;
-            border: none;
-            border-radius: 5px;
-        }
-        button:hover {
-            background-color: #45a049; /* Color más oscuro al pasar el mouse */
-        }
-        .matrix-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-        }
-        .matrix {
-            display: grid;
-            gap: 5px;
-        }
-        .result {
-            margin-top: 20px;
-            font-size: 18px;
-            color: #ffffff; /* Texto blanco */
-        }
-        h1, h3 {
-            color: #ffffff; /* Títulos en blanco */
-        }
-    </style>
+    <link rel="stylesheet" href="static/style.css">
 </head>
 <body>
     <h1>Multiplicación de Matrices</h1>
     <div>
-        <label for="rows">Filas:</label>
-        <input type="number" id="rows" min="1" placeholder="Filas">
-        <label for="cols">Columnas:</label>
-        <input type="number" id="cols" min="1" placeholder="Columnas">
-        <button id="generate">Generar Matrices</button>
+        <h3>Dimensiones de la Primera Matriz</h3>
+        <label for="filas1">Filas:</label>
+        <input type="number" id="filas1" min="1" placeholder="Filas">
+        <label for="columnas1">Columnas:</label>
+        <input type="number" id="columnas1" min="1" placeholder="Columnas">
     </div>
+    <div>
+        <h3>Dimensiones de la Segunda Matriz</h3>
+        <label for="filas2">Filas:</label>
+        <input type="number" id="filas2" min="1" placeholder="Filas">
+        <label for="columnas2">Columnas:</label>
+        <input type="number" id="columnas2" min="1" placeholder="Columnas">
+    </div>
+    <button onclick="generarMatrices()">Generar Matrices</button>
     <div id="matrices" class="matrix-container"></div>
-    <button id="calculate" style="display: none;">Calcular Multiplicación</button>
-    <div id="result" class="result"></div>
+    <button onclick="multiplicarMatrices()">Calcular Multiplicación</button>
+    <div id="resultado" class="result"></div>
 
-    <script>
-        const generateButton = document.getElementById('generate');
-        const calculateButton = document.getElementById('calculate');
-        const matricesDiv = document.getElementById('matrices');
-        const resultDiv = document.getElementById('result');
-
-        generateButton.onclick = function() {
-            let rows = document.getElementById('rows').value;
-            let cols = document.getElementById('cols').value;
-
-            rows = parseInt(rows);
-            cols = parseInt(cols);
-
-            if (isNaN(rows) || isNaN(cols) || rows < 1 || cols < 1) {
-                alert('Por favor, ingrese valores válidos para filas y columnas.');
-                return;
-            }
-
-            matricesDiv.innerHTML = '';
-            for (let m = 1; m <= 2; m++) {
-                let matrixDiv = document.createElement('div');
-                matrixDiv.className = 'matrix';
-                matrixDiv.innerHTML = '<h3>Matriz ' + m + '</h3>';
-                for (let i = 0; i < rows; i++) {
-                    for (let j = 0; j < cols; j++) {
-                        let input = document.createElement('input');
-                        input.type = 'number';
-                        input.className = 'matrix' + m;
-                        input.dataset.row = i;
-                        input.dataset.col = j;
-                        matrixDiv.appendChild(input);
-                    }
-                    matrixDiv.appendChild(document.createElement('br'));
-                }
-                matricesDiv.appendChild(matrixDiv);
-            }
-            calculateButton.style.display = 'block';
-        };
-
-        calculateButton.onclick = function() {
-            let rows = document.getElementById('rows').value;
-            let cols = document.getElementById('cols').value;
-
-            rows = parseInt(rows);
-            cols = parseInt(cols);
-
-            let matrix1 = [];
-            let matrix2 = [];
-
-            for (let i = 0; i < rows; i++) {
-                matrix1.push([]);
-                matrix2.push([]);
-                for (let j = 0; j < cols; j++) {
-                    let value1 = document.querySelector('.matrix1[data-row="' + i + '"][data-col="' + j + '"]').value;
-                    let value2 = document.querySelector('.matrix2[data-row="' + i + '"][data-col="' + j + '"]').value;
-
-                    value1 = parseFloat(value1);
-                    value2 = parseFloat(value2);
-
-                    if (isNaN(value1) || isNaN(value2)) {
-                        alert('Por favor, ingrese solo valores numéricos en las matrices.');
-                        return;
-                    }
-
-                    matrix1[i].push(value1);
-                    matrix2[i].push(value2);
-                }
-            }
-
-            fetch('/multiply', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ matrix1: matrix1, matrix2: matrix2 })
-            })
-            .then(function(response) {
-                return response.json();
-            })
-            .then(function(data) {
-                if (data.error) {
-                    alert(data.error);
-                } else {
-                    resultDiv.innerHTML = '<h3>Matriz Resultante:</h3>';
-                    for (let i = 0; i < data.result.length; i++) {
-                        resultDiv.innerHTML += data.result[i].join(' ') + '<br>';
-                    }
-                }
-            });
-        };
-    </script>
+    <script src="static/multi_materices.js"></script>
 </body>
 </html>
